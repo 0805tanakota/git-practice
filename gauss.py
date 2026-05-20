@@ -8,61 +8,48 @@ Original file is located at
 """
 
 # numpy を import
+# -*- coding: utf-8 -*-
 import numpy as np
 
-# 係数行列と右辺ベクトルを定義
-A = np.array([[1.2,-0.9],[-8.4,6.3]],dtype=float)
-b = np.array([-4,28],dtype=float)
+def gauss_elimination(A, b):
+  """ガウス消去法（部分ピボッティング付き）を用いて連立一次方程式 Ax = b を解く関数"""
+    n = len(A)
+    G = np.hstack((A, b.reshape(n, 1)))
+    eps = 1e-10
 
-# 係数行列の大きさを取得
-n = len(A)
+    # 前進代入
+    for k in range(0, n - 1):
+        pivot_row = k
+        for i in range(k + 1, n):
+            if abs(G[i, k]) > abs(G[pivot_row, k]):
+                pivot_row = i
+        if pivot_row != k:
+            G[[k, pivot_row],:] = G[[pivot_row, k],:]
 
-# 拡大行列 G = [A, b] を作る
-G = np.hstack((A, b.reshape(n, 1)))
+        if abs(G[k, k]) < eps:
+            print("一意解は存在しない。")
+            return None
 
-# 確認用：拡大行列を出力
-print(G)
+        for i in range(k + 1, n):
+            m = G[i, k] / G[k, k]
+            G[i, k:] = G[i, k:] - m * G[k, k:]
 
-eps = 1e-10
-# 前進代入
-for k in range(0, n - 1):
-    print("k = ", k, ", pivot = " , G[k, k])
+    # 後退代入
+    x = np.zeros(n)
+    if abs(G[n-1,n-1]) < eps:
+        print("一意解は存在しない")
+        return None
+    else:
+        x[n-1] = G[n-1][n] / G[n-1][n-1]
+        for i in range(n-2, -1, -1):
+            s = 0.0
+            for j in range(i+1, n):
+                s += G[i][j] * x[j]
+            x[i] = (G[i][n] - s) / G[i][i]
+    return x
 
-    #### 必要であれば部分ピボッティングをここに実装する
-    pivot_row = k
-    for i in range(k + 1, n):
-        if abs(G[i, k]) > abs(G[pivot_row, k]):
-            pivot_row = i
-    if pivot_row != k:
-        G[[k, pivot_row],:] = G[[pivot_row, k],:]
-
-    if abs(G[k, k]) < eps:
-      print("一意解は存在しない。")
-      break
-
-
-    #### ピボッティングした後に前進消去を行う
-    for i in range(k + 1, n):
-      m = G[i, k] / G[k, k]
-      G[i, k:] = G[i, k:] - m * G[k, k:]
-
-    # 確認用：前進消去中の拡大行列を出力
-    print(G)
-
-# 解を格納する行列を宣言
-x = np.zeros(n)
-if abs(G[n-1,n-1]) < eps:
-  print("一意解は存在しない")
-else:
-  x[n-1] = G[n-1][n] / G[n-1][n-1]
-
-  #### 後退代入を行う
-  for i in range(n-2, -1, -1):
-    s = 0.0
-    for j in range(i+1, n):
-      s += G[i][j] * x[j]
-      x[i] = (G[i][n] - s) / G[i][i]
-
-  # 確認用：解を出力
-  print(x)
-  #変更点
+# テスト実行
+A = np.array([[1.2, -0.9], [-8.4, 6.3]], dtype=float)
+b = np.array([-4, 28], dtype=float)
+x = gauss_elimination(A, b)
+print("解:", x)
