@@ -12,7 +12,7 @@ Original file is located at
 import numpy as np
 
 def gauss_elimination(A, b):
-  """ガウス消去法（部分ピボッティング付き）を用いて連立一次方程式 Ax = b を解く関数"""
+    """ガウス消去法（部分ピボッティング付き）を用いて連立一次方程式 Ax = b を解く関数"""
     n = len(A)
     G = np.hstack((A, b.reshape(n, 1)))
     eps = 1e-10
@@ -45,17 +45,19 @@ def gauss_elimination(A, b):
             s = 0.0
             for j in range(i+1, n):
                 s += G[i][j] * x[j]
-            x[i] = (G[i][n] - s) / G[i][i]
+                x[i] = (G[i][n] - s) / G[i][i]
     return x
 
 # テスト実行（2x2）
 A = np.array([[1.2, -0.9], [-8.4, 6.3]], dtype=float)
 b = np.array([-4, 28], dtype=float)
 x = gauss_elimination(A, b)
-print("2x2の解:", x)
 
-# ★ここを追加：テスト実行（3x3の解が存在するデータ）
+# ★表示を綺麗に丸めるように修正したよ！
+print("2x2の解:", np.round(x, 4))
+
 A_3x3 = np.array([[2.0, 1.0, 1.0], [1.0, 2.0, 1.0], [1.0, 1.0, 2.0]], dtype=float)
 b_3x3 = np.array([4.0, 4.0, 5.0], dtype=float)
 x_3x3 = gauss_elimination(A_3x3, b_3x3)
-print("3x3の解:", x_3x3)
+# ★こちらも修正！
+print("3x3の解:", np.round(x_3x3, 4))
