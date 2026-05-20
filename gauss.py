@@ -48,10 +48,11 @@ def gauss_elimination(A, b):
                 x[i] = (G[i][n] - s) / G[i][i]
     return x
 
-# テスト実行
+# テスト実行（2x2）
 A = np.array([[1.2, -0.9], [-8.4, 6.3]], dtype=float)
 b = np.array([-4, 28], dtype=float)
 x = gauss_elimination(A, b)
+
 # ★表示を綺麗に丸めるように修正したよ！
 print("2x2の解:", np.round(x, 4))
 
