@@ -48,8 +48,14 @@ def gauss_elimination(A, b):
             x[i] = (G[i][n] - s) / G[i][i]
     return x
 
-# テスト実行
+# テスト実行（2x2）
 A = np.array([[1.2, -0.9], [-8.4, 6.3]], dtype=float)
 b = np.array([-4, 28], dtype=float)
 x = gauss_elimination(A, b)
-print("解:", x)
+print("2x2の解:", x)
+
+# ★ここを追加：テスト実行（3x3の解が存在するデータ）
+A_3x3 = np.array([[2.0, 1.0, 1.0], [1.0, 2.0, 1.0], [1.0, 1.0, 2.0]], dtype=float)
+b_3x3 = np.array([4.0, 4.0, 5.0], dtype=float)
+x_3x3 = gauss_elimination(A_3x3, b_3x3)
+print("3x3の解:", x_3x3)
